@@ -1,0 +1,87 @@
+name: Nightly build of JSXC master
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Repo
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+          
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: JSXC Checkout & Setup
+        run: |
+          git clone https://github.com/Fishbowler/jsxc jsxc
+          cd jsxc
+          git checkout fix_webpack_config
+          yarn
+      
+      - name: JSXC Build & Copy Assets
+        run: |
+          cd jsxc
+          mkdir archives
+          node scripts/build-release.js
+          rm -rf ../classes/jsxc/*
+          cp -r ./dist/. ../classes/jsxc
+
+      # Create a variable with this plugin's name
+      - id: get-id
+        name: Compute needed variables
+        run: |
+          set -x
+          id=$(echo ${{ github.repository }} | cut -d- -f2)
+          echo "::set-output name=id::$id"
+          echo "id is '$id'"
+          tag=$(echo ${{ github.ref }} | cut -d '/' -f3)
+          echo "::set-output name=tag::$tag"
+          echo "tag is '$tag'"
+          version=$(echo ${{ github.ref }} | cut -d '/' -f3 | cut -c 2-)
+          echo "::set-output name=version::$version"
+          echo "version is '$version'"
+
+      - name: Setup JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-java11-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-java11-maven-
+            ${{ runner.os }}-
+      
+      - name: Igniterealtime CI Tooling
+        run: |
+          git clone --depth 1 https://github.com/igniterealtime/ci-tooling.git target/ci-tooling
+          cp target/ci-tooling/maven-settings-for-openfire-plugins.xml $HOME/.m2/settings.xml
+
+      - name: Build with Maven
+        run:  mvn -B package
+
+      - name: Archive built plugin
+        uses: actions/upload-artifact@v2
+        with:
+          name: jsxc-daily-build
+          path: target/${{ steps.get-id.outputs.id }}-openfire-plugin-assembly.jar

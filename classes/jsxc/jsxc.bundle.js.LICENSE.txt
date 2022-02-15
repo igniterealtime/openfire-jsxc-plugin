@@ -17,8 +17,8 @@
 /*!
  * JavaScript XMPP Client - the open chat
  *
- * Version: 4.3.1
- * Build date: Thu Jul 08 2021
+ * Version: 4.4.0
+ * Build date: Fri Feb 04 2022
  * https://www.jsxc.org/
  *
  * JSXC is released under the MIT license, but this file also contains
@@ -59,7 +59,7 @@
 
 /*!
 * screenfull
-* v5.1.0 - 2020-12-24
+* v5.2.0 - 2021-11-03
 * (c) Sindre Sorhus; MIT License
 */
 

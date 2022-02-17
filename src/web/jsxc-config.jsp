@@ -27,6 +27,8 @@
 <%@ page import="org.igniterealtime.openfire.plugin.jsxc.OptionsServlet" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="org.jivesoftware.openfire.spi.ConnectionType" %>
+<%@ page import="org.jivesoftware.openfire.spi.ConnectionManagerImpl" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <jsp:useBean id="webManager" class="org.jivesoftware.util.WebManager"  />
@@ -181,14 +183,14 @@
         <fmt:param value=""/>
     </fmt:message>
     <% if ( httpBindManager.isHttpBindActive() ) {
-        final String unsecuredAddress = "http://" + XMPPServer.getInstance().getServerInfo().getHostname() + ":" + httpBindManager.getHttpBindUnsecurePort() + "/jsxc/";
+        final String unsecuredAddress = "http://" + XMPPServer.getInstance().getServerInfo().getHostname() + ":" + ((ConnectionManagerImpl)XMPPServer.getInstance().getConnectionManager()).getPort(ConnectionType.BOSH_C2S, false) + "/jsxc/";
     %>
         <fmt:message key="config.page.link.unsecure">
             <fmt:param value="<%=unsecuredAddress%>"/>
         </fmt:message>
     <% } %>
     <% if ( httpBindManager.isHttpsBindActive() ) {
-        final String securedAddress = "https://" + XMPPServer.getInstance().getServerInfo().getHostname() + ":" + httpBindManager.getHttpBindSecurePort() + "/jsxc/";
+        final String securedAddress = "https://" + XMPPServer.getInstance().getServerInfo().getHostname() + ":" + ((ConnectionManagerImpl)XMPPServer.getInstance().getConnectionManager()).getPort(ConnectionType.BOSH_C2S, true) + "/jsxc/";
     %>
         <fmt:message key="config.page.link.secure">
             <fmt:param value="<%=securedAddress%>"/>

@@ -66,8 +66,6 @@ public class JSXCPlugin implements Plugin
         context = new WebAppContext( null, pluginDirectory.getPath() + File.separator + "classes/", "/" + CONTEXT_ROOT );
         context.setClassLoader( this.getClass().getClassLoader() );
 
-        context.setAttribute( InstanceManager.class.getName(), new SimpleInstanceManager());
-
         HttpBindManager.getInstance().addJettyHandler( context );
     }
 

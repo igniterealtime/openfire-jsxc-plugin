@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Ignite Realtime Foundation. All rights reserved.
+ * Copyright (C) 2017-2024 Ignite Realtime Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,7 @@
  */
 package org.igniterealtime.openfire.plugin.jsxc;
 
-import org.apache.tomcat.InstanceManager;
-import org.apache.tomcat.SimpleInstanceManager;
-import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
-import org.eclipse.jetty.plus.annotation.ContainerInitializer;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.ee8.webapp.WebAppContext;
 import org.jivesoftware.admin.AuthCheckFilter;
 import org.jivesoftware.openfire.container.Plugin;
 import org.jivesoftware.openfire.container.PluginManager;
@@ -30,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
 
 /**
  * An Openfire plugin that integrates the JSXC web client.
@@ -65,12 +60,6 @@ public class JSXCPlugin implements Plugin
         // Add the Webchat sources to the same context as the one that's providing the BOSH interface.
         context = new WebAppContext( null, pluginDirectory.getPath() + File.separator + "classes/", "/" + CONTEXT_ROOT );
         context.setClassLoader( this.getClass().getClassLoader() );
-
-        // Ensure the JSP engine is initialized correctly (in order to be able to cope with Tomcat/Jasper precompiled JSPs).
-        final List<ContainerInitializer> initializers = new ArrayList<>();
-        initializers.add( new ContainerInitializer( new JettyJasperInitializer(), null ) );
-        context.setAttribute("org.eclipse.jetty.containerInitializers", initializers);
-        context.setAttribute( InstanceManager.class.getName(), new SimpleInstanceManager());
 
         HttpBindManager.getInstance().addJettyHandler( context );
     }

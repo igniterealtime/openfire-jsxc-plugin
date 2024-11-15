@@ -66,10 +66,6 @@ public class JSXCPlugin implements Plugin
         context = new WebAppContext( null, pluginDirectory.getPath() + File.separator + "classes/", "/" + CONTEXT_ROOT );
         context.setClassLoader( this.getClass().getClassLoader() );
 
-        // Ensure the JSP engine is initialized correctly (in order to be able to cope with Tomcat/Jasper precompiled JSPs).
-        final List<ContainerInitializer> initializers = new ArrayList<>();
-        initializers.add( new ContainerInitializer( new JettyJasperInitializer(), null ) );
-        context.setAttribute("org.eclipse.jetty.containerInitializers", initializers);
         context.setAttribute( InstanceManager.class.getName(), new SimpleInstanceManager());
 
         HttpBindManager.getInstance().addJettyHandler( context );

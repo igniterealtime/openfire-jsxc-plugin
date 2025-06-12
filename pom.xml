@@ -4,11 +4,11 @@
     <parent>
         <artifactId>plugins</artifactId>
         <groupId>org.igniterealtime.openfire</groupId>
-        <version>5.0.0-SNAPSHOT</version>
+        <version>5.0.0-beta</version>
     </parent>
     <groupId>org.igniterealtime.openfire.plugins</groupId>
     <artifactId>jsxc</artifactId>
-    <version>4.4.0.3-SNAPSHOT</version>
+    <version>4.4.0.4-SNAPSHOT</version>
     <name>JSXC</name>
     <description>Adds the (third-party) JSXC web client to Openfire.</description>
     <build>

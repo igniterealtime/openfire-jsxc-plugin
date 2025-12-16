@@ -30,9 +30,8 @@ jobs:
 
       - name: JSXC Checkout & Setup
         run: |
-          git clone https://github.com/Fishbowler/jsxc jsxc
+          git clone https://github.com/jsxc/jsxc jsxc
           cd jsxc
-          git checkout fix_webpack_config
           yarn
       
       - name: JSXC Build & Copy Assets

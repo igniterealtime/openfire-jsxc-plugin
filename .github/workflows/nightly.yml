@@ -81,7 +81,7 @@ jobs:
         run:  mvn -B package
 
       - name: Archive built plugin
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: jsxc-daily-build
           path: target/${{ steps.get-id.outputs.id }}-openfire-plugin-assembly.jar
